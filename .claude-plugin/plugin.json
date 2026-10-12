@@ -2,15 +2,36 @@
   "name": "readeck",
   "version": "0.1.0",
   "description": "Search, read, save and organize bookmarks in your Readeck instance",
-  "author": { "name": "overflowy" },
+  "author": {
+    "name": "overflowy"
+  },
   "repository": "https://github.com/overflowy/readeck-mcp",
-  "keywords": ["readeck", "bookmarks", "read-it-later", "mcp"],
+  "keywords": [
+    "readeck",
+    "bookmarks",
+    "read-it-later",
+    "mcp"
+  ],
   "userConfig": {
     "READECK_URL": {
       "type": "string",
       "title": "Readeck URL",
       "description": "Base URL of your Readeck instance, for example https://readeck.example.com",
       "required": true
+    }
+  },
+  "mcpServers": {
+    "readeck": {
+      "command": "uv",
+      "args": [
+        "run",
+        "--directory",
+        "${CLAUDE_PLUGIN_ROOT}",
+        "readeck-mcp"
+      ],
+      "env": {
+        "READECK_URL": "${user_config.READECK_URL}"
+      }
     }
   }
 }
