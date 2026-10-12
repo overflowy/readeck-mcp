@@ -81,9 +81,24 @@ def _drop_none(params: dict[str, Any]) -> dict[str, Any]:
 def _summarize(bookmark: dict[str, Any]) -> dict[str, Any]:
     """Keep the fields useful to a model and drop links to resources/images."""
     keys = (
-        "id", "title", "url", "site_name", "authors", "description", "type", "lang",
-        "created", "published", "labels", "is_marked", "is_archived", "read_progress",
-        "reading_time", "word_count", "has_article", "state",
+        "id",
+        "title",
+        "url",
+        "site_name",
+        "authors",
+        "description",
+        "type",
+        "lang",
+        "created",
+        "published",
+        "labels",
+        "is_marked",
+        "is_archived",
+        "read_progress",
+        "reading_time",
+        "word_count",
+        "has_article",
+        "state",
     )
     summary = {k: bookmark[k] for k in keys if k in bookmark}
     summary["readeck_url"] = f"{READECK_URL}/bookmarks/{bookmark['id']}"
@@ -122,11 +137,22 @@ async def search_bookmarks(
         limit: Page size, 1 to 100.
         offset: Number of results to skip, for pagination.
     """
-    params = _drop_none({
-        "search": search, "labels": labels, "site": site, "author": author, "type": type,
-        "read_status": read_status, "is_archived": is_archived, "is_marked": is_marked,
-        "collection": collection, "sort": sort, "limit": limit, "offset": offset,
-    })
+    params = _drop_none(
+        {
+            "search": search,
+            "labels": labels,
+            "site": site,
+            "author": author,
+            "type": type,
+            "read_status": read_status,
+            "is_archived": is_archived,
+            "is_marked": is_marked,
+            "collection": collection,
+            "sort": sort,
+            "limit": limit,
+            "offset": offset,
+        }
+    )
     response = await _request("GET", "/bookmarks", params=params)
     return {
         "total": int(response.headers.get("Total-Count", 0)),
@@ -190,10 +216,17 @@ async def update_bookmark(
         add_labels: Labels to add.
         remove_labels: Labels to remove.
     """
-    body = _drop_none({
-        "title": title, "note": note, "is_marked": is_marked, "is_archived": is_archived,
-        "read_progress": read_progress, "add_labels": add_labels, "remove_labels": remove_labels,
-    })
+    body = _drop_none(
+        {
+            "title": title,
+            "note": note,
+            "is_marked": is_marked,
+            "is_archived": is_archived,
+            "read_progress": read_progress,
+            "add_labels": add_labels,
+            "remove_labels": remove_labels,
+        }
+    )
     if not body:
         raise ToolError("Nothing to update: pass at least one field.")
     response = await _request("PATCH", f"/bookmarks/{bookmark_id}", json=body)
@@ -246,7 +279,10 @@ def main() -> None:
         description=f"MCP server for Readeck at {READECK_URL} (set READECK_URL to change).",
     )
     parser.add_argument(
-        "command", nargs="?", default="serve", choices=["serve", "login", "logout"],
+        "command",
+        nargs="?",
+        default="serve",
+        choices=["serve", "login", "logout"],
         help="serve: run the MCP server over stdio (default). login: authorize in the browser "
         "and save a token. logout: revoke and delete the saved token.",
     )

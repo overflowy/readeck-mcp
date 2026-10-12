@@ -92,14 +92,17 @@ def login(base_url: str) -> str:
 
     try:
         with httpx.Client(base_url=base_url, headers={"Accept": "application/json"}, timeout=30) as client:
-            response = client.post("/api/oauth/client", json={
-                "client_name": "Readeck MCP",
-                "client_uri": f"{base_url}/",
-                "software_id": "readeck-mcp",
-                "software_version": "0.1.0",
-                "grant_types": ["authorization_code"],
-                "redirect_uris": [redirect_uri],
-            })
+            response = client.post(
+                "/api/oauth/client",
+                json={
+                    "client_name": "Readeck MCP",
+                    "client_uri": f"{base_url}/",
+                    "software_id": "readeck-mcp",
+                    "software_version": "0.1.0",
+                    "grant_types": ["authorization_code"],
+                    "redirect_uris": [redirect_uri],
+                },
+            )
             if response.is_error:
                 raise LoginError(f"Client registration failed (HTTP {response.status_code}): {response.text[:300]}")
             client_id = response.json()["client_id"]
@@ -107,14 +110,16 @@ def login(base_url: str) -> str:
             verifier = secrets.token_urlsafe(48)
             challenge = base64.urlsafe_b64encode(hashlib.sha256(verifier.encode()).digest()).rstrip(b"=").decode()
             state = secrets.token_urlsafe(16)
-            authorize_url = f"{base_url}/authorize?" + urlencode({
-                "client_id": client_id,
-                "redirect_uri": redirect_uri,
-                "scope": SCOPES,
-                "code_challenge": challenge,
-                "code_challenge_method": "S256",
-                "state": state,
-            })
+            authorize_url = f"{base_url}/authorize?" + urlencode(
+                {
+                    "client_id": client_id,
+                    "redirect_uri": redirect_uri,
+                    "scope": SCOPES,
+                    "code_challenge": challenge,
+                    "code_challenge_method": "S256",
+                    "state": state,
+                }
+            )
 
             _log(f"Opening Readeck to authorize access. If no browser opens, visit:\n{authorize_url}")
             webbrowser.open(authorize_url)
@@ -131,11 +136,14 @@ def login(base_url: str) -> str:
                 reason = result.get("error_description") or result.get("error")
                 raise LoginError(f"Authorization was not granted: {reason}")
 
-            response = client.post("/api/oauth/token", json={
-                "grant_type": "authorization_code",
-                "code": result["code"],
-                "code_verifier": verifier,
-            })
+            response = client.post(
+                "/api/oauth/token",
+                json={
+                    "grant_type": "authorization_code",
+                    "code": result["code"],
+                    "code_verifier": verifier,
+                },
+            )
             if response.is_error:
                 raise LoginError(f"Token exchange failed (HTTP {response.status_code}): {response.text[:300]}")
             token = response.json()["access_token"]
