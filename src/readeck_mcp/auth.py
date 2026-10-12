@@ -67,10 +67,11 @@ class _CallbackHandler(http.server.BaseHTTPRequestHandler):
             return
         type(self).result = {k: v[0] for k, v in parse_qs(url.query).items()}
         ok = "code" in self.result
+        error = self.result.get("error_description") or self.result.get("error", "unknown error")
         body = (
             "<h1>Readeck MCP is connected</h1><p>You can close this tab.</p>"
             if ok
-            else f"<h1>Login failed</h1><p>{self.result.get('error_description') or self.result.get('error', 'unknown error')}</p>"
+            else f"<h1>Login failed</h1><p>{error}</p>"
         )
         self.send_response(200)
         self.send_header("Content-Type", "text/html; charset=utf-8")
@@ -127,7 +128,8 @@ def login(base_url: str) -> str:
             if result.get("state") != state:
                 raise LoginError("Authorization response had a mismatched state; ignoring it.")
             if "code" not in result:
-                raise LoginError(f"Authorization was not granted: {result.get('error_description') or result.get('error')}")
+                reason = result.get("error_description") or result.get("error")
+                raise LoginError(f"Authorization was not granted: {reason}")
 
             response = client.post("/api/oauth/token", json={
                 "grant_type": "authorization_code",

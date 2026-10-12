@@ -18,6 +18,13 @@ readeck-mcp = "readeck_mcp:main"
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "B", "UP", "SIM", "RUF"]
+
 [tool.pyright]
 venvPath = "."
 venv = ".venv"
