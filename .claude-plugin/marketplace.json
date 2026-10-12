@@ -1,0 +1,12 @@
+{
+  "name": "readeck-mcp",
+  "owner": { "name": "overflowy" },
+  "description": "Readeck MCP server for Claude Code",
+  "plugins": [
+    {
+      "name": "readeck",
+      "source": ".",
+      "description": "Search, read, save and organize bookmarks in your Readeck instance"
+    }
+  ]
+}

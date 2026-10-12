@@ -287,9 +287,11 @@ def main() -> None:
         "and save a token. logout: revoke and delete the saved token.",
     )
     command = parser.parse_args().command
-    if not READECK_URL:
+    # An unconfigured plugin can pass its placeholder through literally, so check the scheme too.
+    if not READECK_URL.startswith(("http://", "https://")):
         sys.exit(
-            "READECK_URL is not set. Point it at your Readeck instance, e.g. READECK_URL=https://readeck.example.com"
+            f"READECK_URL must be the http(s) URL of your Readeck instance, e.g. https://readeck.example.com "
+            f"(got {READECK_URL!r})."
         )
     if command == "serve":
         mcp.run()
