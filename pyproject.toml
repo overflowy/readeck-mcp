@@ -1,0 +1,22 @@
+[project]
+name = "readeck-mcp"
+version = "0.1.0"
+description = "MCP server for a Readeck instance"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "anyio>=4.1",
+    "httpx>=0.28.1",
+    "mcp>=2.3.0",
+]
+
+[project.scripts]
+readeck-mcp = "readeck_mcp:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
