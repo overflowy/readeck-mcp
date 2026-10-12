@@ -15,7 +15,7 @@ from pydantic import Field
 
 from readeck_mcp import auth
 
-READECK_URL = os.environ.get("READECK_URL", "https://readeck.example.com").rstrip("/")
+READECK_URL = os.environ.get("READECK_URL", "").rstrip("/")
 READECK_TOKEN = os.environ.get("READECK_TOKEN", "")
 
 READ_ONLY = ToolAnnotations(read_only_hint=True, open_world_hint=False)
@@ -276,7 +276,7 @@ async def list_collections() -> list[dict[str, Any]]:
 def main() -> None:
     parser = argparse.ArgumentParser(
         prog="readeck-mcp",
-        description=f"MCP server for Readeck at {READECK_URL} (set READECK_URL to change).",
+        description="MCP server for the Readeck instance set in READECK_URL.",
     )
     parser.add_argument(
         "command",
@@ -287,6 +287,10 @@ def main() -> None:
         "and save a token. logout: revoke and delete the saved token.",
     )
     command = parser.parse_args().command
+    if not READECK_URL:
+        sys.exit(
+            "READECK_URL is not set. Point it at your Readeck instance, e.g. READECK_URL=https://readeck.example.com"
+        )
     if command == "serve":
         mcp.run()
     elif command == "login":

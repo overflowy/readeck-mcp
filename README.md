@@ -1,6 +1,6 @@
 # readeck-mcp
 
-An MCP server for [Readeck](https://readeck.org), set by default to `https://readeck.example.com`.
+An MCP server for a [Readeck](https://readeck.org) instance.
 
 ## Tools
 
@@ -18,10 +18,11 @@ An MCP server for [Readeck](https://readeck.org), set by default to `https://rea
 
 ## Setup
 
-Register the server with Claude Code:
+Register the server with Claude Code, setting `READECK_URL` to your Readeck instance:
 
 ```sh
 claude mcp add readeck --scope user \
+  -e READECK_URL=https://readeck.example.com \
   -- uv run --directory /path/to/readeck-mcp readeck-mcp
 ```
 
@@ -30,8 +31,9 @@ The first time a tool needs Readeck, the server opens the Readeck authorization 
 You can also manage the login from a terminal:
 
 ```sh
+export READECK_URL=https://readeck.example.com
 uv run --directory /path/to/readeck-mcp readeck-mcp login   # authorize now
 uv run --directory /path/to/readeck-mcp readeck-mcp logout  # revoke and delete the saved token
 ```
 
-To skip the browser flow, set `READECK_TOKEN` to an API token created under **Settings > API Tokens**. To use a different Readeck instance, set `READECK_URL`. Other MCP clients can run the same `uv run ... readeck-mcp` command over stdio.
+`READECK_URL` is required; the server exits with an error if it's unset. To skip the browser flow, set `READECK_TOKEN` to an API token created under **Settings > API Tokens**. Other MCP clients can run the same `uv run ... readeck-mcp` command over stdio with `READECK_URL` in its environment.
