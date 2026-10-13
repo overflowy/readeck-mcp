@@ -36,8 +36,6 @@ claude plugin install readeck@readeck-mcp --config READECK_URL=https://readeck.e
 
 When you enable the plugin, Claude Code asks for your Readeck URL. To change it later, open `/plugin`, select the plugin under **Installed** and choose **Configure options**.
 
-The repo is private, so Claude Code clones it with the git credentials already on your machine. Over HTTPS, run `gh auth login` and `gh auth setup-git` once. Set `CLAUDE_CODE_PLUGIN_PREFER_HTTPS=1` if you don't use an SSH key with GitHub.
-
 ### Without the plugin
 
 You can also register the server directly from a local checkout:
